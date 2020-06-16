@@ -28,11 +28,6 @@ namespace WPFWithBackgroundService
             }).Build();
         }
 
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
-        }
-
         private async void OnApplicationExit(object sender, ExitEventArgs e)
         {
             await _host.StopAsync();
