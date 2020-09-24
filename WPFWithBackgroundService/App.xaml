@@ -1,9 +1,10 @@
-﻿<Application x:Class="WPFWithBackgroundService.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WPFWithBackgroundService"
-             Exit="OnApplicationExit"
-             ShutdownMode="OnMainWindowClose"
-             Startup="OnApplicationStartup">
+﻿<Application
+    x:Class="WPFWithBackgroundService.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:WPFWithBackgroundService"
+    Exit="OnApplicationExit"
+    ShutdownMode="OnExplicitShutdown"
+    Startup="OnApplicationStartup">
     <Application.Resources />
 </Application>

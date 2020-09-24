@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 using System.Windows;
 using WPFWithBackgroundService.Services;
 
@@ -25,14 +26,19 @@ namespace WPFWithBackgroundService
             {
                 services.AddHostedService<MyService>();
                 services.AddSingleton<MainWindow>();
-            }).Build();
+            })
+            .UseWPFAppLifetime()
+            .Build();
         }
 
         private async void OnApplicationExit(object sender, ExitEventArgs e)
         {
-            await _host.StopAsync();
+            using (_host)
+            {
+                _host.Services.GetRequiredService<MainWindow>().Close();
 
-            _host.Dispose();
+                await _host.StopAsync().ConfigureAwait(false);
+            }
 
             _host = null;
         }
