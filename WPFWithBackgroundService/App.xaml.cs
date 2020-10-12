@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using WPFWithBackgroundService.Services;
 
 namespace WPFWithBackgroundService
@@ -27,18 +28,30 @@ namespace WPFWithBackgroundService
                 services.AddHostedService<MyService>();
                 services.AddSingleton<MainWindow>();
             })
-            .UseWPFAppLifetime()
+            //.UseWPFAppLifetime()
             .Build();
         }
 
-        private async void OnApplicationExit(object sender, ExitEventArgs e)
+        private void OnApplicationExit(object sender, ExitEventArgs e)
         {
-            using (_host)
-            {
-                _host.Services.GetRequiredService<MainWindow>().Close();
+            _host.Services.GetRequiredService<MainWindow>().Close();
 
-                await _host.StopAsync().ConfigureAwait(false);
-            }
+            var frame = new DispatcherFrame(false);
+
+            Task.Run(async () => {
+                try
+                {
+                    await _host.StopAsync();
+                }
+                finally
+                {
+                    frame.Continue = false;
+                }
+            });
+
+            Dispatcher.PushFrame(frame);
+
+            _host.Dispose();
 
             _host = null;
         }

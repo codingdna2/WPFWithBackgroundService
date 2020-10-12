@@ -12,14 +12,18 @@ namespace WPFWithBackgroundService.Services
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                await Task.Delay(10, stoppingToken);
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Delay(10, stoppingToken);
+                }
             }
-
-            Debug.WriteLine("MyService is stopping..");
-
-            await Task.Delay(100, stoppingToken);
+            catch (TaskCanceledException)
+            {
+                Debug.WriteLine("MyService is stopping..");
+                Thread.Sleep(10);
+            }
 
             Debug.WriteLine("MyService is stopped..");
         }
